@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio — IE & Data Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #faf8f4;
+    --surface: #ffffff;
+    --surface2: #f3efe8;
+    --border: #e8e2d9;
+    --accent: #2E5A88;
+    --accent-dark: #000080;
+    --accent-soft: #fdf3dc;
+    --red: #c48820;
+    --text: #1a1714;
+    --muted: #7a7068;
+    --heading: 'Fraunces', serif;
+    --body: 'Plus Jakarta Sans', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--body); font-size: 15px; line-height: 1.7; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 3rem;
+    background: rgba(250,248,244,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; text-decoration: none; }
+  .logo-box {
+    width: 40px; height: 40px; background: var(--accent); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--heading); font-weight: 900; font-size: 1rem; color: white;
+  }
+  .logo-name { font-family: var(--heading); font-weight: 700; font-size: 1rem; color: var(--text); }
+  .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500;
+    padding: 0.45rem 0.9rem; border-radius: 6px; transition: all 0.18s;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--surface2); }
+  .nav-links a.active { color: var(--text); background: var(--accent-soft); font-weight: 600; }
+
+  .page { display: none; min-height: 100vh; padding-top: 72px; }
+  .page.active { display: block; animation: fadeIn 0.35s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .hero { text-align: center; padding: 5rem 2rem 3rem; max-width: 700px; margin: 0 auto; }
+  .hero-greeting {
+    display: inline-block; font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); margin-bottom: 1.2rem;
+  }
+  .hero-name {
+    font-family: var(--heading); font-size: clamp(3rem, 7vw, 5rem); font-weight: 900;
+    line-height: 1.05; color: var(--text); margin-bottom: 1.2rem;
+  }
+  .hero-divider { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.4rem; }
+  .hero-divider::before, .hero-divider::after { content: ''; display: block; width: 48px; height: 2px; background: var(--red); border-radius: 2px; }
+  .hero-divider-dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; }
+  .hero-bio { color: var(--muted); font-size: 1rem; line-height: 1.8; max-width: 520px; margin: 0 auto 2rem; }
+  .hero-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+
+  .category-bar { background: var(--accent); padding: 0.9rem 3rem; display: flex; gap: 2rem; align-items: center; margin-top: 2rem; flex-wrap: wrap; }
+  .cat-btn { font-family: var(--body); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.6); background: none; border: none; cursor: pointer; transition: color 0.18s; padding: 0; }
+  .cat-btn.active, .cat-btn:hover { color: white; }
+
+  .skills-section { max-width: 900px; margin: 0 auto; padding: 3.5rem 2rem; }
+  .section-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent-dark); margin-bottom: 1.2rem; }
+  .skill-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chip { font-size: 0.8rem; font-weight: 500; padding: 0.4rem 1rem; background: var(--surface); border: 1.5px solid var(--border); border-radius: 100px; color: var(--text); transition: all 0.18s; cursor: default; }
+  .chip:hover { border-color: var(--accent); background: var(--accent-soft); }
+
+  .stats-row { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; justify-content: center; gap: 0; }
+  .stat-item { flex: 1; max-width: 200px; text-align: center; padding: 2.2rem 1rem; border-right: 1px solid var(--border); }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-family: var(--heading); font-size: 2.4rem; font-weight: 900; color: var(--accent-dark); line-height: 1; }
+  .stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 0.3rem; font-weight: 500; }
+
+  .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.7rem 1.5rem; background: var(--accent); color: white; font-family: var(--body); font-size: 0.85rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; transition: background 0.18s, transform 0.15s; }
+  .btn:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-dark); }
+
+  .project-page { max-width: 860px; margin: 0 auto; padding: 4rem 2rem 5rem; }
+  .project-header { margin-bottom: 2.5rem; }
+  .project-num { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; color: var(--accent-dark); text-transform: uppercase; margin-bottom: 0.6rem; }
+  .project-title { font-family: var(--heading); font-size: clamp(2.2rem, 4vw, 3.4rem); font-weight: 900; line-height: 1.1; color: var(--text); margin-bottom: 0.9rem; }
+  .project-subtitle { color: var(--muted); font-size: 1rem; max-width: 560px; line-height: 1.8; }
+  .project-banner { width: 100%; height: 220px; background: var(--accent-soft); border: 2px solid var(--border); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 5rem; margin-bottom: 2.5rem; position: relative; overflow: hidden; }
+  .project-banner::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 70% 50%, rgba(232,168,56,0.12), transparent 60%); }
+  .project-meta { display: flex; flex-wrap: wrap; gap: 0; border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 2.5rem; background: var(--surface); }
+  .meta-item { flex: 1; min-width: 130px; padding: 1.1rem 1.4rem; border-right: 1px solid var(--border); }
+  .meta-item:last-child { border-right: none; }
+  .meta-label { font-size: 0.67rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+  .meta-value { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+  .project-section { margin-bottom: 2.2rem; }
+  .project-section h3 { font-family: var(--heading); font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.8rem; padding-bottom: 0.6rem; border-bottom: 2px solid var(--border); }
+  .project-section p { color: var(--muted); font-size: 0.92rem; line-height: 1.9; margin-bottom: 0.8rem; }
+  .project-section ul { list-style: none; padding: 0; }
+  .project-section ul li { color: var(--muted); font-size: 0.9rem; padding: 0.45rem 0; padding-left: 1.4rem; position: relative; border-bottom: 1px solid var(--border); }
+  .project-section ul li:last-child { border-bottom: none; }
+  .project-section ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+  .tech-stack { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.6rem; }
+  .tech-badge { font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.8rem; background: var(--accent-soft); border: 1px solid #e8d5a8; border-radius: 6px; color: var(--accent-dark); }
+  .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 0.75rem; }
+  .result-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 1.5rem 1rem; text-align: center; transition: border-color 0.18s, transform 0.18s; }
+  .result-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .result-num { font-family: var(--heading); font-size: 2.2rem; font-weight: 900; color: var(--accent-dark); }
+  .result-desc { font-size: 0.75rem; font-weight: 600; color: var(--muted); margin-top: 0.2rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .edit-hint { background: #fffbf0; border: 1.5px dashed #e8d5a8; border-radius: 8px; padding: 0.7rem 1.1rem; font-size: 0.78rem; color: var(--accent-dark); margin-bottom: 2rem; }
+
+  footer { background: var(--surface); border-top: 1px solid var(--border); padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 0.78rem; }
+  footer a { color: var(--muted); text-decoration: none; transition: color 0.18s; }
+  footer a:hover { color: var(--accent-dark); }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-logo .logo-name { display: none; }
+    .category-bar { padding: 0.9rem 1.5rem; gap: 1.2rem; }
+    .hero { padding: 3.5rem 1.5rem 2rem; }
+    .project-page { padding: 2.5rem 1.5rem; }
+    .stats-row { flex-wrap: wrap; }
+    footer { flex-direction: column; gap: 0.8rem; text-align: center; padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" onclick="showPage('about')">
+    <div class="logo-box">PNT</div>
+    <!-- EDIT: your name -->
+    <span class="logo-name">Peter Tiller</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="showPage('about')" id="nav-about" class="active">About</a></li>
+    <li><a href="#" onclick="showPage('project1')" id="nav-project1">Project 1</a></li>
+    <li><a href="#" onclick="showPage('project2')" id="nav-project2">Project 2</a></li>
+    <li><a href="#" onclick="showPage('project3')" id="nav-project3">Project 3</a></li>
+    <li><a href="#" onclick="showPage('contact')" id="nav-contact">Contact</a></li>
+  </ul>
+</nav>
+
+
+<!-- ABOUT PAGE -->
+<div id="page-about" class="page active">
+  <section class="hero">
+    <!-- EDIT: tagline -->
+    <span class="hero-greeting">IE & Data Science Student</span>
+    <!-- EDIT: your name -->
+    <h1 class="hero-name">Peter Tiller</h1>
+    <div class="hero-divider"><div class="hero-divider-dot"></div></div>
+    <!-- EDIT: bio -->
+    <p class="hero-bio">Hello! I am a current Industrial Engineering and Data Science student at The Georgia Institute of Technology. My experiences range from creating data driven solutions to problems in finance and operations to supporting learning as a teaching assistant. I have also led technology initiatives for large-scale events, collaborated on startup projects, and built applications that integrate real-world data with emerging technologies.</p>
+    <div class="hero-actions">
+      <a class="btn" href="mailto:your@email.com">Get in Touch</a>
+      <a class="btn btn-outline" onclick="showPage('project1')" href="#">View Projects →</a>
+    </div>
+  </section>
+
+  <div class="category-bar">
+    <button class="cat-btn active">All Categories</button>
+    <button class="cat-btn">Data Visualization</button>
+    <button class="cat-btn">Machine Learning</button>
+    <button class="cat-btn">Operations Research</button>
+  </div>
+
+  <div class="skills-section">
+    <div class="section-label">Skills & Tools</div>
+    <!-- EDIT: your skills -->
+    <div class="skill-chips">
+      <span class="chip">Python</span><span class="chip">R</span><span class="chip">SQL</span>
+      <span class="chip">Machine Learning</span><span class="chip">Simulation | Simio</span>
+      <span class="chip">Optimization</span><span class="chip">Tableau</span>
+      <span class="chip">GenAI</span><span class="chip">NLP</span>
+    </div>
+  </div>
+
+  <!-- EDIT: your stats -->
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num">3+</div><div class="stat-label">Projects</div></div>
+    <div class="stat-item"><div class="stat-num">2</div><div class="stat-label">Fields of Study</div></div>
+    <div class="stat-item"><div class="stat-num">Dec 2027</div><div class="stat-label">Graduating</div></div>
+    <div class="stat-item"><div class="stat-num">3+</div><div class="stat-label">Experiences</div></div>
+  </div>
+</div>
+
+
+<!-- PROJECT 1 -->
+<div id="page-project1" class="page">
+  <div class="project-page">
+    <div class="edit-hint">✏️ Edit tip — Update the title, description, bullets, results, and GitHub link below.</div>
+    <div class="project-header">
+      <div class="project-num">Project 01</div>
+      <!-- EDIT -->
+      <h2 class="project-title">Supply Chain<br/>Optimization Model</h2>
+      <p class="project-subtitle">A mixed-integer linear programming model to minimize total logistics costs across a multi-echelon distribution network.</p>
+    </div>
+    <!-- EDIT: change emoji -->
+    <div class="project-banner">🏭</div>
+    <!-- EDIT: metadata -->
+    <div class="project-meta">
+      <div class="meta-item"><div class="meta-label">Role</div><div class="meta-value">Lead Analyst</div></div>
+      <div class="meta-item"><div class="meta-label">Timeline</div><div class="meta-value">Jan – Apr 2024</div></div>
+      <div class="meta-item"><div class="meta-label">Team Size</div><div class="meta-value">4 members</div></div>
+      <div class="meta-item"><div class="meta-label">Status</div><div class="meta-value">✅ Completed</div></div>
+    </div>
+    <div class="project-section">
+      <h3>Overview</h3>
+      <!-- EDIT -->
+      <p>Developed a comprehensive optimization model to redesign a regional distribution network, reducing total costs by 18% while maintaining all service-level constraints. Used Python (PuLP) for formulation and Tableau for visualization.</p>
+    </div>
+    <div class="project-section">
+      <h3>Key Contributions</h3>
+      <!-- EDIT -->
+      <ul>
+        <li>Formulated and solved a MILP model with 200+ decision variables</li>
+        <li>Ran sensitivity analysis to identify critical cost drivers</li>
+        <li>Built an interactive dashboard for stakeholder presentations</li>
+        <li>Documented full methodology and recommendations report</li>
+      </ul>
+    </div>
+    <div class="project-section">
+      <h3>Technologies</h3>
+      <!-- EDIT -->
+      <div class="tech-stack">
+        <span class="tech-badge">Python</span><span class="tech-badge">PuLP</span>
+        <span class="tech-badge">Pandas</span><span class="tech-badge">Tableau</span>
+        <span class="tech-badge">Excel</span><span class="tech-badge">Git</span>
+      </div>
+    </div>
+    <div class="project-section">
+      <h3>Results</h3>
+      <!-- EDIT -->
+      <div class="results-grid">
+        <div class="result-card"><div class="result-num">18%</div><div class="result-desc">Cost Reduction</div></div>
+        <div class="result-card"><div class="result-num">200+</div><div class="result-desc">Variables Solved</div></div>
+        <div class="result-card"><div class="result-num">99%</div><div class="result-desc">Service Level</div></div>
+      </div>
+    </div>
+    <!-- EDIT -->
+    <a class="btn" href="https://github.com/yourusername/project1" target="_blank">View on GitHub ↗</a>
+  </div>
+</div>
+
+
+<!-- PROJECT 2 -->
+<div id="page-project2" class="page">
+  <div class="project-page">
+    <div class="edit-hint">✏️ Edit tip — Replace with your second project details.</div>
+    <div class="project-header">
+      <div class="project-num">Project 02</div>
+      <!-- EDIT -->
+      <h2 class="project-title">Predictive Maintenance<br/>with Machine Learning</h2>
+      <p class="project-subtitle">A classification model predicting equipment failures before they occur, enabling proactive maintenance scheduling in a manufacturing facility.</p>
+    </div>
+    <div class="project-banner">🤖</div>
+    <div class="project-meta">
+      <!-- EDIT -->
+      <div class="meta-item"><div class="meta-label">Role</div><div class="meta-value">Data Scientist</div></div>
+      <div class="meta-item"><div class="meta-label">Timeline</div><div class="meta-value">Aug – Dec 2024</div></div>
+      <div class="meta-item"><div class="meta-label">Team Size</div><div class="meta-value">Solo</div></div>
+      <div class="meta-item"><div class="meta-label">Status</div><div class="meta-value">✅ Completed</div></div>
+    </div>
+    <div class="project-section">
+      <h3>Overview</h3>
+      <p>Built a Random Forest classifier trained on sensor time-series data to predict machine failures 48 hours in advance. Reduced unplanned downtime by 30% in simulation testing across 5 machine types.</p>
+    </div>
+    <div class="project-section">
+      <h3>Key Contributions</h3>
+      <ul>
+        <li>Engineered 40+ features from raw sensor time-series data</li>
+        <li>Tuned hyperparameters via cross-validated grid search</li>
+        <li>Deployed model as a REST API using FastAPI</li>
+        <li>Evaluated with precision/recall tradeoffs for maintenance scheduling</li>
+      </ul>
+    </div>
+    <div class="project-section">
+      <h3>Technologies</h3>
+      <div class="tech-stack">
+        <span class="tech-badge">Python</span><span class="tech-badge">scikit-learn</span>
+        <span class="tech-badge">Pandas</span><span class="tech-badge">NumPy</span>
+        <span class="tech-badge">FastAPI</span><span class="tech-badge">Matplotlib</span>
+      </div>
+    </div>
+    <div class="project-section">
+      <h3>Results</h3>
+      <div class="results-grid">
+        <div class="result-card"><div class="result-num">92%</div><div class="result-desc">Accuracy</div></div>
+        <div class="result-card"><div class="result-num">30%</div><div class="result-desc">Less Downtime</div></div>
+        <div class="result-card"><div class="result-num">48h</div><div class="result-desc">Advance Warning</div></div>
+      </div>
+    </div>
+    <a class="btn" href="https://github.com/yourusername/project2" target="_blank">View on GitHub ↗</a>
+  </div>
+</div>
+
+
+<!-- PROJECT 3 -->
+<div id="page-project3" class="page">
+  <div class="project-page">
+    <div class="edit-hint">✏️ Edit tip — Replace with your third project. Duplicate this block to add more!</div>
+    <div class="project-header">
+      <div class="project-num">Project 03</div>
+      <!-- EDIT -->
+      <h2 class="project-title">Workforce Scheduling<br/>Simulation</h2>
+      <p class="project-subtitle">A discrete-event simulation optimizing shift scheduling across a call center, reducing overtime costs and improving agent utilization.</p>
+    </div>
+    <div class="project-banner">📊</div>
+    <div class="project-meta">
+      <!-- EDIT -->
+      <div class="meta-item"><div class="meta-label">Role</div><div class="meta-value">IE Analyst</div></div>
+      <div class="meta-item"><div class="meta-label">Timeline</div><div class="meta-value">Jan – Mar 2025</div></div>
+      <div class="meta-item"><div class="meta-label">Team Size</div><div class="meta-value">3 members</div></div>
+      <div class="meta-item"><div class="meta-label">Status</div><div class="meta-value">🔄 In Progress</div></div>
+    </div>
+    <div class="project-section">
+      <h3>Overview</h3>
+      <p>Modeled call center queuing dynamics using SimPy to test scheduling policies. Simulated 10,000+ agent-hours and identified an optimized shift pattern cutting overtime by 22% while keeping abandonment rate below 5%.</p>
+    </div>
+    <div class="project-section">
+      <h3>Key Contributions</h3>
+      <ul>
+        <li>Built stochastic arrival models from 6 months of historical call data</li>
+        <li>Designed and tested 8 different scheduling policies</li>
+        <li>Performed variance reduction for accurate confidence intervals</li>
+        <li>Presented findings to operations managers with actionable recommendations</li>
+      </ul>
+    </div>
+    <div class="project-section">
+      <h3>Technologies</h3>
+      <div class="tech-stack">
+        <span class="tech-badge">Python</span><span class="tech-badge">SimPy</span>
+        <span class="tech-badge">SciPy</span><span class="tech-badge">Pandas</span><span class="tech-badge">Seaborn</span>
+      </div>
+    </div>
+    <div class="project-section">
+      <h3>Results</h3>
+      <div class="results-grid">
+        <div class="result-card"><div class="result-num">22%</div><div class="result-desc">OT Cost Cut</div></div>
+        <div class="result-card"><div class="result-num">10k+</div><div class="result-desc">Hours Simulated</div></div>
+        <div class="result-card"><div class="result-num">&lt;5%</div><div class="result-desc">Abandon Rate</div></div>
+      </div>
+    </div>
+    <a class="btn" href="https://github.com/yourusername/project3" target="_blank">View on GitHub ↗</a>
+  </div>
+</div>
+
+
+<!-- CONTACT -->
+<div id="page-contact" class="page">
+  <div class="project-page" style="max-width:600px; text-align:center;">
+    <div class="project-num" style="text-align:center;">Say Hello</div>
+    <h2 class="project-title" style="font-size:3rem;">Let's Connect</h2>
+    <!-- EDIT -->
+    <p style="color:var(--muted); font-size:1rem; line-height:1.9; margin-bottom:2.5rem;">I'm always open to new opportunities, collaborations, or just a good conversation about data and systems. Feel free to reach out!</p>
+    <div style="display:flex; flex-direction:column; gap:1rem; align-items:center;">
+      <!-- EDIT: your links -->
+      <a class="btn" href="mailto:ptiller6@gatech.edu" style="min-width:220px; justify-content:center;">📧 My Email</a>
+      <a class="btn btn-outline" href="https://linkedin.com/in/peter-tiller-gt" target="_blank" style="min-width:220px; justify-content:center;">LinkedIn ↗</a>
+      <a class="btn btn-outline" href="https://github.com/pntiller6" target="_blank" style="min-width:220px; justify-content:center;">GitHub ↗</a>
+    </div>
+  </div>
+</div>
+
+
+<footer>
+  <!-- EDIT -->
+  <span>© 2026 Peter Tiller</span>
+  <span>
+    <a href="mailto:ptiller6@gatech.edu">Email</a> &nbsp;·&nbsp;
+    <a href="https://linkedin.com/in/peter-tiller-gt" target="_blank">LinkedIn</a> &nbsp;·&nbsp;
+    <a href="https://github.com/pntiller6" target="_blank">GitHub</a>
+  </span>
+</footer>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    document.getElementById('nav-' + id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return false;
+  }
+  document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', e => e.preventDefault()));
+  document.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
